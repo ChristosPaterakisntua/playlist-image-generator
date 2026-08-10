@@ -223,6 +223,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-# TO DO: ADD TESTING FOR INVALID URL e.g track url

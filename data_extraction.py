@@ -131,3 +131,49 @@ def get_ytmusic_metadata(url: str) -> dict[str, Any]:
         raise MetadataExtractionError(
             f"Metadata extraction failed. Details: {error}"
         ) from error
+
+
+# ========================== WRAPPER ==============================
+
+SUPPORTED_PLATFORMS: dict[str, function] = {
+    "Spotify": get_spotify_metadata,
+    "YTMusic": get_ytmusic_metadata,
+}
+
+
+def extract_metadata(url: str) -> dict[str, Any]:
+    """
+    Extracts all metadata that can be obtained via api libraries.
+    It functions as a wrapper because it uses the right function for url's platform.
+    Currently supports :data:`SUPPORTED_PLATFORMS`
+
+    Args
+    ------
+    url : str
+        Playlist link
+
+    Returns
+    ------
+    dict[str, Any]
+        Metadata containing all information obtained from the platform.
+        Key features are name, total tracks and the included tracks
+        (along with their data e.g. name, artists)
+    """
+    url = url.strip()
+    parsed = urlparse(url)
+    netlocation: str = parsed.netloc
+    try:
+        if "open.spotify.com" in netlocation:
+            return get_spotify_metadata(url)
+
+        elif "music.youtube.com" in netlocation:
+            return get_ytmusic_metadata(url)
+
+    except PrivateURLError as error:
+        print(f"Please make the playlist public.\nError details: {error}")
+
+    except InvalidURLError as error:
+        print(f"Please provide a valid url.\nError details: {error}")
+
+    except Exception as error:
+        print(f"We are really sorry... Try again later.\nError details: {error}")
