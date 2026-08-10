@@ -5,6 +5,7 @@ from data_extraction import (
     get_spotify_metadata,
     InvalidURLError,
     PrivateURLError,
+    get_ytmusic_metadata,
 )
 
 
@@ -109,7 +110,10 @@ def test_get_spotify_metadata(print_res: bool = False) -> None:
 
     except Exception as error:
         stats.record_failure()
-        success_printer(False, error)
+        success_printer(
+            False,
+            error,
+        )
 
     print(stats)
     print(
@@ -117,21 +121,108 @@ def test_get_spotify_metadata(print_res: bool = False) -> None:
     )
 
 
-def main():
-    answers : list[str] = ['y', 'n']
+def test_get_ytmusic_metadata(print_res: bool = False) -> None:
+    """
+    Basic testing of :func:`get_ytmusic_metadata`.
 
-    verbose : bool = False
-    ans0 = ""
-    while ans0 not in answers:
-        ans0 = input("Verbose? (y/n): ").strip().lower()
-    verbose = (ans0 == 'y')
-    
-    ans1 = ""
-    while ans1 not in answers:
-        ans1 = input("Test test_get_spotify_metadata? (y/n): ").strip().lower()
-    if ans1 == 'y':
-        test_get_spotify_metadata(print_res=verbose)
+    Args
+    ------
+    print_res : if `True` the result of the valid url extraction is being printed
+    """
+    valid_url = "https://music.youtube.com/playlist?list=PLLPhPFTQzD3o3iqX73jNZgWzNmeP0HHug&si=m08BCD7hMG5pAbe-"
+    private_url = (
+        "https://music.youtube.com/playlist?list=PLLPhPFTQzD3pYuBfus-6hJfSpjn_gcR7S"
+    )
+    invalid_url = "https://music.youtube.com/watch?v=VQ0fpZ4ZBBo&si=MMs3Vu7YXiBjEvCg"
+
+    print(
+        "========================== TESTING YTMUSIC METADATA EXTRACTION =========================="
+    )
+
+    stats = TestStats()
+    print("Valid url testing")
+    try:
+        res = get_ytmusic_metadata(valid_url)
+        if print_res:
+            print(
+                dumps(
+                    res,
+                    indent=4,
+                    ensure_ascii=False,
+                )
+            )
+        stats.record_success()
+        success_printer(
+            True,
+        )
+    except Exception as error:
+        stats.record_failure()
+        success_printer(
+            False,
+            error,
+        )
+
+    print("Private url testing")
+    try:
+        get_ytmusic_metadata(private_url)
+
+    except PrivateURLError:
+        stats.record_success()
+        success_printer(
+            True,
+        )
+
+    except Exception as error:
+        stats.record_failure()
+        success_printer(
+            False,
+            error,
+        )
+
+    print("Invalid url testing")
+    try:
+        get_ytmusic_metadata(invalid_url)
+
+    except InvalidURLError:
+        stats.record_success()
+        success_printer(
+            True,
+        )
+
+    except Exception as error:
+        stats.record_failure()
+        success_printer(
+            False,
+            error,
+        )
+
+    print(stats)
+    print(
+        "======================= END OF YTMUSIC METADATA EXTRACTION TESTING ======================="
+    )
+
+
+def ask_yes_or_no(prompt: str) -> bool:
+    while True:
+        ans = input(prompt).strip().lower()
+        if ans in {"y", "n"}:
+            return ans == "y"
+
+
+def main():
+    verbose = ask_yes_or_no("Verbose? (y/n): ")
+
+    run1: bool = ask_yes_or_no("Run test_get_spotify_metadata? (y/n): ")
+    if run1:
+        test_get_spotify_metadata(verbose)
+
+    run2: bool = ask_yes_or_no("Run test_get_ytmusic_metadata? (y/n): ")
+    if run2:
+        test_get_ytmusic_metadata(verbose)
 
 
 if __name__ == "__main__":
     main()
+
+
+# TO DO: ADD TESTING FOR INVALID URL e.g track url
