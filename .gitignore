@@ -1,3 +1,8 @@
+# HELPER FOLDERS
 __pycache__/
 .ruff_cache/
 .venv/
+
+# SCRAPPED IDEAS 
+double_prompt_generator.py
+visual_concept_example.json
