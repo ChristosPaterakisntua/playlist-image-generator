@@ -78,7 +78,6 @@ def get_spotify_metadata(url: str) -> dict[str, Any]:
 
 # url example
 # https://music.youtube.com/playlist?list=PLLPhPFTQzD3o3iqX73jNZgWzNmeP0HHug&si=m08BCD7hMG5pAbe-
-# https://music.youtube.com/playlist?list=PLLPhPFTQzD3pYuBfus-6hJfSpjn_gcR7S
 
 
 def get_ytmusic_metadata(url: str) -> dict[str, Any]:
@@ -135,10 +134,10 @@ def get_ytmusic_metadata(url: str) -> dict[str, Any]:
 
 # ========================== WRAPPER ==============================
 
-SUPPORTED_PLATFORMS: dict[str, function] = {
-    "Spotify": get_spotify_metadata,
-    "YTMusic": get_ytmusic_metadata,
-}
+SUPPORTED_PLATFORMS: list[str] = [
+    "Spotify",
+    "YTMusic",
+]
 
 
 def extract_metadata(url: str) -> dict[str, Any]:
@@ -162,18 +161,8 @@ def extract_metadata(url: str) -> dict[str, Any]:
     url = url.strip()
     parsed = urlparse(url)
     netlocation: str = parsed.netloc
-    try:
-        if "open.spotify.com" in netlocation:
-            return get_spotify_metadata(url)
+    if "open.spotify.com" in netlocation:
+        return get_spotify_metadata(url)
 
-        elif "music.youtube.com" in netlocation:
-            return get_ytmusic_metadata(url)
-
-    except PrivateURLError as error:
-        print(f"Please make the playlist public.\nError details: {error}")
-
-    except InvalidURLError as error:
-        print(f"Please provide a valid url.\nError details: {error}")
-
-    except Exception as error:
-        print(f"We are really sorry... Try again later.\nError details: {error}")
+    elif "youtube.com" in netlocation:
+        return get_ytmusic_metadata(url)
