@@ -25,23 +25,23 @@ def metadata_processing(metadata: dict[str, Any]) -> dict[str, Any]:
         - track_titles : list[str]
     """
     # playlist title
-    title = metadata.get("name")  # spotify
-    if not title:
+    title = metadata.get("name", "")  # spotify
+    if title == "":
         title = metadata.get("title", "")  # ytmusic
 
     # description
     description = metadata.get("description", "")
 
     # total tracks
-    total_tracks = metadata.get("total_tracks")
-    if not total_tracks:
+    total_tracks = metadata.get("total_tracks", -1)
+    if total_tracks == -1:
         total_tracks = metadata.get("trackCount")
 
     track_titles: list[str] = []
     track_list = metadata.get("tracks", [])
     for track in track_list:
-        track_title = track.get("track", {}).get("name")
-        if not track_title:
+        track_title = track.get("track", {}).get("name", "")
+        if track_title == "":
             track_title = track.get("title")
         track_titles.append(track_title)
 
@@ -110,6 +110,7 @@ def simple_prompt_generator(metadata: dict[str, Any]) -> str:
         "Do not add song titles or other readable text.\n"
         "Do not include any readable text by default.\n"
         "Include the playlist title only if typography can be rendered accurately and elegantly.\n"
-        "Never include misspelled, distorted, or pseudo-text."
+        "Never include misspelled, distorted, or pseudo-text.\n"
+        "Make sure you generate an image that doesn't violate your security measures regarding similarity to third-party content.\n"
     )
     return prompt
