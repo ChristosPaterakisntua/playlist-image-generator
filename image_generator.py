@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from google import genai
-from PIL import Image
+from PIL.Image import Image
 
 
 MODEL = "gemini-3.1-flash-image"

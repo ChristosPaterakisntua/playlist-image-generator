@@ -8,6 +8,8 @@ from data_extraction import (
     get_ytmusic_metadata,
 )
 
+from utils import ask_yes_or_no
+
 
 @dataclass
 class TestStats:
@@ -202,21 +204,14 @@ def test_get_ytmusic_metadata(print_res: bool = False) -> None:
     )
 
 
-def ask_yes_or_no(prompt: str) -> bool:
-    while True:
-        ans = input(prompt).strip().lower()
-        if ans in {"y", "n"}:
-            return ans == "y"
-
-
 def main():
-    verbose = ask_yes_or_no("Verbose? (y/n): ")
+    verbose = ask_yes_or_no("Verbose?")
 
-    run1: bool = ask_yes_or_no("Run test_get_spotify_metadata? (y/n): ")
+    run1: bool = ask_yes_or_no("Run test_get_spotify_metadata?")
     if run1:
         test_get_spotify_metadata(verbose)
 
-    run2: bool = ask_yes_or_no("Run test_get_ytmusic_metadata? (y/n): ")
+    run2: bool = ask_yes_or_no("Run test_get_ytmusic_metadata?")
     if run2:
         test_get_ytmusic_metadata(verbose)
 
