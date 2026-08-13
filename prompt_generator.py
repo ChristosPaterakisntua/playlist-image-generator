@@ -53,7 +53,7 @@ def metadata_processing(metadata: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def simple_prompt_generator(metadata: dict[str, Any]) -> str:
+def prompt_generator(metadata: dict[str, Any]) -> str:
     """
     Generates a prompt for the ai image generation based on title and tracks included
 

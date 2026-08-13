@@ -1,12 +1,11 @@
 import json
 
 from data_extraction import (
-    extract_metadata, 
+    extract_metadata,
     PrivateURLError,
     InvalidURLError,
-    MetadataExtractionError,
 )
-from prompt_generator import metadata_processing, simple_prompt_generator
+from prompt_generator import metadata_processing, prompt_generator
 
 
 # Spotify link example: https://open.spotify.com/playlist/2dzAz7hzBNqBVlAbCHJMiH?si=d6e87175d616438d
@@ -35,7 +34,7 @@ try:
     )
 
     print("\n================== SIMPLE PROMPT ==================\n")
-    print(simple_prompt_generator(processed_data))
+    print(prompt_generator(processed_data))
 except PrivateURLError as error:
     print(f"Please make the playlist public.\nError details: {error}")
 

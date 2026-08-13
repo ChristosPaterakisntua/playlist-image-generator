@@ -3,6 +3,9 @@ __pycache__/
 .ruff_cache/
 .venv/
 
+# environment
+.env
+
 # SCRAPPED IDEAS 
 double_prompt_generator.py
 visual_concept_example.json
